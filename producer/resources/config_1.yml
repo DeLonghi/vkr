@@ -1,0 +1,83 @@
+id: thread_name
+threads:
+  service_name:
+    delay: 1500
+    input:
+    - Ethane: 0.02
+      Methane: 0.0
+      Propane: 0.227
+      iButane: 0.147
+      iPentane: 0.032
+      nButane: 0.555
+      nPentane: 0.019
+    - Ethane: 0.018
+      Methane: 0.0
+      Propane: 0.232
+      iButane: 0.15
+      iPentane: 0.023
+      nButane: 0.571
+      nPentane: 0.006
+    - Ethane: 0.015
+      Methane: 0.0
+      Propane: 0.217
+      iButane: 0.145
+      iPentane: 0.025
+      nButane: 0.59
+      nPentane: 0.008
+    - Ethane: 0.017
+      Methane: 0.0
+      Propane: 0.224
+      iButane: 0.146
+      iPentane: 0.028
+      nButane: 0.575
+      nPentane: 0.01
+    - Ethane: 0.011
+      Methane: 0.0
+      Propane: 0.192
+      iButane: 0.144
+      iPentane: 0.038
+      nButane: 0.6
+      nPentane: 0.015
+    - Ethane: 0.014
+      Methane: 0.0
+      Propane: 0.216
+      iButane: 0.149
+      iPentane: 0.029
+      nButane: 0.579
+      nPentane: 0.013
+    - Ethane: 0.021
+      Methane: 0.0
+      Propane: 0.209
+      iButane: 0.146
+      iPentane: 0.038
+      nButane: 0.57
+      nPentane: 0.016
+    - Ethane: 0.017
+      Methane: 0.0
+      Propane: 0.224
+      iButane: 0.159
+      iPentane: 0.036
+      nButane: 0.542
+      nPentane: 0.022
+    - Ethane: 0.013
+      Methane: 0.0
+      Propane: 0.203
+      iButane: 0.15
+      iPentane: 0.042
+      nButane: 0.575
+      nPentane: 0.017
+    - Ethane: 0.017
+      Methane: 0.0
+      Propane: 0.226
+      iButane: 0.152
+      iPentane: 0.032
+      nButane: 0.558
+      nPentane: 0.015
+    - Ethane: 0.014
+      Methane: 0.0
+      Propane: 0.213
+      iButane: 0.152
+      iPentane: 0.034
+      nButane: 0.569
+      nPentane: 0.018
+type: Producer

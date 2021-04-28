@@ -1,0 +1,60 @@
+type: Producer
+id: thread_name
+threads:
+  service_name:
+    delay: 1500
+    input:
+    - 
+        T Cond K-6 : 38.5
+    - 
+        T Cond K-6 : 40.6
+    - 
+        T Cond K-6 : 42.2
+    - 
+        T Top K-6 : 48.4
+    -   
+        T Top K-6 : 51.2
+    -   
+        T Top K-6 : 53.9
+    -   
+        T Bot K-6 : 89
+    -   
+        T Bot K-6 : 93.4
+    -   
+        T Bot K-6 : 97.8
+    -   
+        T Cond K-7 : 33
+    -   
+        T Cond K-7 : 38
+    -   
+        T Cond K-7 : 43
+    -   
+        T Top K-7 : 54.5
+    -   
+        T Top K-7 : 58.7
+    -   
+        T Top K-7 : 69.2
+    -   
+        T Bot K-7 : 74.5
+    -   
+        T Bot K-7 : 75.2
+    -   
+        T Bot K-7 : 75.9
+    -   
+        T Cond K-8 : 28
+    -   
+        T Cond K-8 : 33
+    -   
+        T Cond K-8 : 38
+    -   
+        T Top K-8 : 58
+    -   
+        T Top K-8 : 58.5
+    -   
+        T Top K-8 : 58.7
+    -   
+        T Bot K-8 : 66.7
+    -   
+        T Bot K-8 : 69.4
+    -   
+        T Bot K-8 : 72.1
