@@ -60,14 +60,16 @@ class Model:
             pickle.dump(self.model, open(f"pkl/{self.tag}.pkl", 'wb'))
             ret = {"score": self.model.score(x, y)}
             logging.info(f"tag {self.tag} FITTED score {self.model.score(x, y)}")
+            return ret
         elif mode == 'predict':
             logging.info(f"tag {self.tag} PREDICT: {data}")
             # Подготоваливаем массива,  работает только для одномерных.
-            w = self.rollwsize
-            x = [sum(data[:w])/w]
-            x.extend(data[w:])
-            x = np.array([x])
-            predicted = [i for i in self.model.predict(x)[0]]
+            # w = self.rollwsize
+            # x = [sum(data[:w])/w]
+            # x.extend(data[w:])
+            # x = np.array([x])
+            # predicted = [i for i in self.model.predict(x)[0]]
+            predicted = self.model.predict(data)
             logging.info(f"tag {self.tag} PREDICTED: {predicted}")
             ret = {"result": predicted}
         return ret

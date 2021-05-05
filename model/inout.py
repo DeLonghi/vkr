@@ -1,5 +1,5 @@
 # Standard library imports
-from flask import Flask, jsonify, request
+# from flask import Flask, jsonify, request
 import warnings
 import json
 import sys
@@ -31,6 +31,7 @@ class AbsIO:
         return self.model.run(model_data, model_mode)
 
     def run(self):
+        print('!!!!!!!!!')
         model_mode, model_data = self.task_jsn["mode"], self.task_jsn.get("data")
         self.task_jsn["data"] = self._run_as_task(model_mode, model_data)
         jsn = json.dumps(self.task_jsn)
@@ -64,3 +65,4 @@ class FileIO(AbsIO):
         for task_jsn in open(self.file_name, 'r'):
             self.task_jsn = json.loads(task_jsn)
             super().run()
+

@@ -46,15 +46,21 @@ class ModelBroadcast(Broadcast):
     def _preprocess_data(self):
         ti = self._iterator.__next__()
         res = self.buffer.loc[ti]
-        res = res.dropna().to_json()
+        res = res.dropna().to_json(orient='index')
+        
+        # print(res)
         return bytes(json.dumps(res), encoding='utf-8')
 
     def run(self):
-        while True:
+        # while True:
             start = time.time()
             json_to_send = self._preprocess_data()
             # self.producer.send("mytopic", json_to_send)
             sys.stdout.buffer.write(json_to_send)
             sys.stdout.write("\n")
             sys.stdout.flush()
-            time.sleep(self.delay - ((time.time() - start) % self.delay))
+            d = json_to_send.decode('utf-8')
+            d = json.loads(d)
+            data = pd.read_json(path_or_buf=d, orient='index')
+            print(data.to_numpy()[:,0])
+            # time.sleep(self.delay - ((time.time() - start) % self.delay))
