@@ -19,6 +19,7 @@ class Model:
 
     def _set_from_pkl(self, path):
         self.model = pickle.load(open(path, 'rb'))
+        # print(self.model.feature_names_)
 
     def _w_shift(self, df):
         w_x, w_y = self.history, self.future

@@ -2,7 +2,11 @@ from model import Model
 import numpy as np
 import pandas as pd
 from itertools import cycle
-# import array
+import json
+from kafka import KafkaConsumer, KafkaProducer
+
+environ = dict(DB_USER="postgres", DB_PASS="postgres", DB_HOST="localhost", DB_PORT="5432", DB_NAME="postgres",
+               KAFKA_TOPIC="mytopic", KAFKA_HOST="localhost:29092")
 
 conf = {"tag": "AVT10:LC475",
 "rollwsize" : '72',
@@ -10,18 +14,27 @@ conf = {"tag": "AVT10:LC475",
 "future": '72'}
 
 m = Model(conf)
-m._set_from_pkl('model\\resources\\restore_fuel_v5.pkl')
-d = np.array([3.123, 11, 3.1231, 3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231,3.123, 11, 3.1231], dtype='f')
-# d = array('f', [61.2267784, 60.56488666, 59.75663732])
-# print(m.run(d, 'predict'))
+m._set_from_pkl('D:\\vkr\\model\\resources\\restore_fuel_v5.pkl')
 
-ccc = pd.read_csv('C:\\vkr\producer\\resources\\fuel_test.csv')
-_iterator = cycle(ccc.index)
-ti = _iterator.__next__()
-res = ccc.loc[ti]
-res = res.dropna().to_json(orient='index')
-# print(res)
-send_to_consumer = {}
-send_to_consumer['input'] = res
-send_to_consumer['output'] = m.run(d, 'predict')
-print(send_to_consumer)
+consumer_params = dict(bootstrap_servers=[environ["KAFKA_HOST"]], auto_offset_reset='latest', api_version=(0, 10),
+                      max_partition_fetch_bytes=107374182, value_deserializer=lambda m: json.loads(m.decode('utf-8')))
+                      
+kafka_consumer = KafkaConsumer(environ["KAFKA_TOPIC"], **consumer_params)
+
+kafka_producer = KafkaProducer(bootstrap_servers=['localhost:29092'], api_version=(0, 10, 2), request_timeout_ms=10)
+
+while True:
+    print('here')
+    for message in kafka_consumer:
+        i_json = message.value
+        # print(values_json)
+        data = pd.read_json(path_or_buf=i_json, orient='index')
+        input_data = data.to_numpy()[1:,0]
+        predicted_result = m.run(input_data, "predict")
+        json_to_send = {}
+        json_to_send['model'] = m.tag
+        json_to_send['input_data'] = i_json
+        json_to_send['predicted_result'] = predicted_result['result']
+        json_to_send = bytes(json.dumps(json_to_send), encoding='utf-8')
+        print(json_to_send)
+        kafka_producer.send(environ["KAFKA_TOPIC"], json_to_send)

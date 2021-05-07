@@ -1,6 +1,6 @@
 # Standard library imports
-# from kafka import KafkaProducer
-# from kafka.errors import KafkaError
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
 
 from abc import abstractmethod
 from threading import Thread
@@ -10,6 +10,7 @@ import time
 import json
 import sys
 import json
+from datetime import datetime
 
 class Broadcast(Thread):
     """Метакласс, описывающий общее поведение и структуру всех Broadcast методов"""
@@ -20,7 +21,7 @@ class Broadcast(Thread):
     def __init__(self):
         Thread.__init__(self)
         self.json = {}
-        # self.producer = KafkaProducer(bootstrap_servers=['localhost:29092'], api_version=(0, 10, 2), request_timeout_ms=10)
+        self.producer = KafkaProducer(bootstrap_servers=['localhost:29092'], api_version=(0, 10, 2), request_timeout_ms=10)
 
 
     @abstractmethod
@@ -36,6 +37,7 @@ class ModelBroadcast(Broadcast):
 
     def __init__(self, delay, data_file):
         self.buffer = pd.read_csv(data_file)
+        self._preprocess_date()
         Broadcast.__init__(self)
         self.delay = delay
 
@@ -43,24 +45,23 @@ class ModelBroadcast(Broadcast):
         # Итератор по буферу
         self._iterator = cycle(self.buffer.index)
 
+        #Получаем час из полной даты
+    def _preprocess_date(self):
+        self.buffer.date = pd.to_datetime(self.buffer.date, format="%Y-%m-%d %H:%M:%S").dt.hour
+
     def _preprocess_data(self):
         ti = self._iterator.__next__()
         res = self.buffer.loc[ti]
         res = res.dropna().to_json(orient='index')
-        
-        # print(res)
         return bytes(json.dumps(res), encoding='utf-8')
 
     def run(self):
-        # while True:
+        while True:
             start = time.time()
             json_to_send = self._preprocess_data()
-            # self.producer.send("mytopic", json_to_send)
+            self.producer.send("mytopic", json_to_send)
             sys.stdout.buffer.write(json_to_send)
             sys.stdout.write("\n")
             sys.stdout.flush()
-            d = json_to_send.decode('utf-8')
-            d = json.loads(d)
-            data = pd.read_json(path_or_buf=d, orient='index')
-            print(data.to_numpy()[:,0])
-            # time.sleep(self.delay - ((time.time() - start) % self.delay))
+            # print(data.to_numpy()[:,0])
+            time.sleep(self.delay - ((time.time() - start) % self.delay))

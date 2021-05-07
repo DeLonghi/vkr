@@ -4,7 +4,7 @@ from db_handlers import DB_Saver, Database
 from kafka import KafkaConsumer
 
 environ = dict(DB_USER="postgres", DB_PASS="postgres", DB_HOST="localhost", DB_PORT="5432", DB_NAME="postgres",
-               KAFKA_TOPIC="mytopic", KAFKA_HOST="localhost:29092")
+               KAFKA_TOPIC="mytopic_consumer", KAFKA_HOST="localhost:29092")
 
 class Receiver:
     """Метакласс, описывающий общее поведение и структуру всех Broadcast методов"""
@@ -19,18 +19,7 @@ class Receiver:
 
     def run(self):
         while True:
-            # message = json.loads(input())
-            # thread = DB_Saver(message=message['raw'], database=self.database)
-            # thread.start()
-            # self.kafka_consumer.subscribe(self.kafka_topic)
-            print('here')
             for message in self.kafka_consumer:
-                # values = json.loads(message.value['raw'])
-                print(message.value)
-                # id = values['id']
-                # if id in self.models:
-                #     threads = self.models[id]
-                #     th = values['mode']
-                #     if th in threads:
-                #         thread = DB_Saver(message=values)
-                #         thread.start()
+                values = message.value
+                print(values)
+                DB_Saver(message=values, database=self.database).run()
